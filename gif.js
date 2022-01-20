@@ -2,7 +2,7 @@ const GIPHY_KEY = 'G37gLaEizhTkiBREF1bLvhKf1kKCAPhC';
 
 (function () {
     function giphySearch(keyword) {
-      return fetch(`https://api.giphy.com/v1/gifs/search?q=${keyword}&api_key=${GIPHY_KEY}&limit=5`)
+        return fetch(`https://api.giphy.com/v1/gifs/search?q=${keyword}&api_key=${GIPHY_KEY}&limit=5`)
         .then(response => response.json());
     }
   
@@ -20,42 +20,23 @@ const GIPHY_KEY = 'G37gLaEizhTkiBREF1bLvhKf1kKCAPhC';
       $('.loader-wrapper').removeClass('shown');
     }
   
-    function onImgLoad(img) {
-      return new Promise((resolve, reject) => {
-        img.onload = resolve;
-      });
-    }
-  
     (function listenOnFormSubmit() {
-      $('#searchForm').submit(async (ev) => {
+      $('#searchForm').submit((ev) => {
         ev.preventDefault();
-  
         let $input = $('#searchInput');
   
         main($input.val());
       });
     })();
   
-    async function main(keyword) {
-      const result = await giphySearch(keyword);
+    async function main(searchKeyword) {
+      const result = await giphySearch(searchKeyword);
       $('#thumbs').html('');
-      showLoader();
-      // let loadedImageCount = 0;
-      let promises = [];
       result.data.forEach(gif => {
         let img = new Image();
         img.src = gif.images.original.url;
-        promises.push(onImgLoad(img));
-        // img.onload = () => {
-        //   loadedImageCount++;
-        //   if (loadedImageCount === result.data.length){
-        //     hideLoader()
-        //   }
-        // };
         appendImage(img);
-      });
-  
-      await Promise.all(promises);
-      hideLoader();
+      })
     }
   })();
+
